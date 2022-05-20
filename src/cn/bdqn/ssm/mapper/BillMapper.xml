@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.bdqn.ssm.mapper.BillMapper">
+	<resultMap id="BaseResultMap" type="cn.bdqn.ssm.pojo.Bill">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="billCode" jdbcType="VARCHAR" property="billCode" />
+		<result column="productName" jdbcType="VARCHAR" property="productName" />
+		<result column="productDesc" jdbcType="VARCHAR" property="productDesc" />
+		<result column="productUnit" jdbcType="VARCHAR" property="productUnit" />
+		<result column="productCount" jdbcType="DECIMAL" property="productCount" />
+		<result column="totalPrice" jdbcType="DECIMAL" property="totalPrice" />
+		<result column="isPayment" jdbcType="INTEGER" property="isPayment" />
+		<result column="createdBy" jdbcType="BIGINT" property="createdBy" />
+		<result column="creationDate" jdbcType="TIMESTAMP" property="creationDate" />
+		<result column="modifyBy" jdbcType="BIGINT" property="modifyBy" />
+		<result column="modifyDate" jdbcType="TIMESTAMP" property="modifyDate" />
+		<result column="providerId" jdbcType="BIGINT" property="providerId" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, billCode, productName, productDesc, productUnit,
+		productCount,
+		totalPrice, isPayment,
+		createdBy, creationDate, modifyBy,
+		modifyDate, providerId
+	</sql>
+	<!-- 查询订单信息 -->
+	<select id="billlist" resultType="Bill">
+		SELECT b.* ,p.proName AS providerName
+		FROM
+		smbms.smbms_bill b,
+		smbms.smbms_provider p
+		WHERE b.providerId =p.id
+		<if test="productName!=null and productName!=''"> AND b.productName LIKE CONCAT('%',#{productName},'%')
+		</if>
+		<if test="providerId!=0 and providerId!=null"> AND b.providerId =#{providerId}</if>
+		<if test="isPayment!=0 and isPayment!=null"> AND b.isPayment = #{isPayment}</if>
+		ORDER BY b.creationDate DESC
+		LIMIT #{from},#{pageSize}
+	</select>
+	<!-- 按照条件查询出的总记录数 -->
+	<select id="getcount" resultType="int">
+		SELECT count(*)
+		FROM
+		smbms.smbms_bill b, smbms.smbms_provider p
+		WHERE
+		b.providerId =p.id
+		<if test="productName!=null and productName!=''"> AND b.productName LIKE CONCAT('%',#{productName},'%')
+		</if>
+		<if test="providerId!=0 and providerId!=null"> AND b.providerId =#{providerId}</if>
+		<if test="isPayment!=0 and isPayment!=null"> AND b.isPayment = #{isPayment}</if>
+	</select>
+	<!-- 查询订单编码是否存在 -->
+	<select id="CheckbillCode" resultType="Bill">
+		SELECT *
+		FROM
+		smbms.smbms_bill
+		WHERE billCode =#{billCode}
+	</select>
+	<!-- 保存要添加的订单 -->
+	<insert id="savebill" parameterType="Bill">
+		INSERT INTO smbms.smbms_bill
+		(billCode,
+		productName,
+		productUnit,
+		productCount,
+		totalPrice,
+		isPayment,
+		createdBy,
+		creationDate,
+		providerId
+		)
+		VALUES
+		(#{billCode},
+		#{productName},
+		#{productUnit},
+		#{productCount},
+		#{totalPrice},
+		#{isPayment},
+		#{createdBy},
+		#{creationDate},
+		#{providerId});
+	</insert>
+	<!-- 根据id显示订单信息 -->
+	<select id="getBillbyid" resultType="Bill">
+		SELECT b.* ,p.proName AS
+		providerName
+		FROM
+		smbms.smbms_bill b,
+		smbms.smbms_provider p
+		WHERE
+		b.providerId =p.id and b.id = #{id}
+	</select>
+	<!--根据订单id修改订单信息 -->
+	<update id="updatebillbyid" parameterType="Bill">
+		UPDATE
+		smbms.smbms_bill
+		SET
+		billCode = #{billCode} ,
+		productName =
+		#{productName} ,
+		productUnit = #{productUnit},
+		productCount =
+		#{productCount} ,
+		totalPrice = #{totalPrice} ,
+		isPayment = #{isPayment}
+		,
+		modifyBy = #{modifyBy} ,
+		modifyDate = #{modifyDate} ,
+		providerId =
+		#{providerId}
+		WHERE
+		id = #{id}
+	</update>
+	<!-- 根据id删除订单信息 -->
+	<delete id="deletebillbyid">
+		DELETE FROM smbms.smbms_bill
+		WHERE
+		id = #{id}
+	</delete>
+	<!-- 跟据供应商id查找订单信息 -->
+	 <select id="getbillbypproviderid" resultType="Bill">
+		SELECT *
+		FROM
+		smbms.smbms_bill WHERE providerId = #{pid}
+	</select>
+</mapper>

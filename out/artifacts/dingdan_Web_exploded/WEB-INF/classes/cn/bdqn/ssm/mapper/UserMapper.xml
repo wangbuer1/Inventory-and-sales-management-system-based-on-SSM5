@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.bdqn.ssm.mapper.UserMapper">
+	<resultMap id="BaseResultMap" type="cn.bdqn.ssm.pojo.User">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="userCode" jdbcType="VARCHAR" property="userCode" />
+		<result column="userName" jdbcType="VARCHAR" property="userName" />
+		<result column="userPassword" jdbcType="VARCHAR" property="userPassword" />
+		<result column="gender" jdbcType="INTEGER" property="gender" />
+		<result column="birthday" jdbcType="DATE" property="birthday" />
+		<result column="phone" jdbcType="VARCHAR" property="phone" />
+		<result column="address" jdbcType="VARCHAR" property="address" />
+		<result column="userRole" jdbcType="BIGINT" property="userRole" />
+		<result column="createdBy" jdbcType="BIGINT" property="createdBy" />
+		<result column="creationDate" jdbcType="TIMESTAMP" property="creationDate" />
+		<result column="modifyBy" jdbcType="BIGINT" property="modifyBy" />
+		<result column="modifyDate" jdbcType="TIMESTAMP" property="modifyDate" />
+	</resultMap>
+
+	<sql id="Base_Column_List">
+		id, userCode, userName, userPassword, gender, birthday,
+		phone, address,
+		userRole,
+		createdBy, creationDate, modifyBy, modifyDate
+		, idPicPath,workPicPath
+	</sql>
+	<!-- 获取总记录数 -->
+	<select id="getCount" resultType="int">
+		select count(*)
+		from smbms_user
+		where 1=1
+		<if test="userName!=null and userName!=''">and userName=#{userName}</if>
+		<if test="userRole !=0">
+			and userRole = #{userRole}
+		</if>
+	</select>
+
+	<!-- 登录 -->
+	<select id="selectByPrimaryKey" parameterType="java.lang.Long"
+		resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from smbms_user
+		where userCode = #{userCore}
+	</select>
+
+
+	<!-- 获取用户集合 -->
+	<select id="getUserList" resultMap="BaseResultMap">
+		select u.*,r.roleName as userRoleName from smbms_user u,smbms_role r
+		where
+		u.userRole = r.id
+		<if test="userName!=null and userName!=''"> and u.userName like CONCAT('%',#{userName},'%')</if>
+		<if test="userRole !=0 and userRole !=null">
+			and u.userRole = #{userRole}
+		</if>
+		order by u.creationDate DESC
+		LIMIT #{currentPageNo},#{pageSize}
+	</select>
+	<!-- 添加一条用户信息 -->
+	<insert id="adduser" parameterType="User">
+		INSERT INTO smbms.smbms_user
+		(userCode,userName,userPassword,gender,birthday,phone,address,userRole,createdBy,creationDate,idPicPath,workPicPath)
+		VALUES(#{userCode},#{userName},#{userPassword},#{gender},#{birthday},#{phone},#{address},#{userRole},#{createdBy},#{creationDate},#{idPicPath},#{workPicPath});
+	</insert>
+	<!-- 根据id 查询 用户 -->
+	<select id="getUserbyid" resultMap="BaseResultMap">
+		SELECT u.*,r.roleName as
+		userRoleName from smbms_user u,smbms_role r
+		WHERE u.userRole = r.id and
+		u.id = #{id}
+	</select>
+	<!-- 根据userCode 查询用户 -->
+	<select id="getUserbyuserCode" resultMap="BaseResultMap">
+		SELECT *
+		from smbms_user
+		WHERE userCode = #{userCode}
+	</select>
+	<!-- 根据用户id 删除该用户信息 -->
+	<delete id="DelUserbyId">
+		DELETE FROM smbms.smbms_user
+		WHERE
+		id = #{Id}
+	</delete>
+	<!-- 根据id修改用户信息 -->
+	<update id="updateuserbyid">
+		UPDATE smbms.smbms_user
+		SET
+		userName = #{userName} ,
+		gender =
+		#{gender},
+		birthday = #{birthday} ,
+		phone = #{phone} ,
+		address =
+		#{address} ,
+		userRole = #{userRole} ,
+		modifyBy = #{modifyBy} ,
+		modifyDate =#{modifyDate}
+		WHERE
+		id = #{id}
+	</update>
+	<!-- 根据id修改登录用户的密码 -->
+	<update id="updatepassbyid">
+		UPDATE smbms.smbms_user
+		SET
+		userPassword = #{userPassword},
+		modifyBy = #{modifyBy} ,
+		modifyDate = #{modifyDate}
+		WHERE
+		id = #{id}
+	</update>
+</mapper>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+    <!DOCTYPE configuration   
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"   
+        "http://mybatis.org/dxxxxxxxxxxxtd/mybatis-3-config.dtd">  
+<configuration>  
+      <settings>  
+          <!-- mybatis运行行为 -->  
+          <setting name="lazyLoadingEnabled" value="false" />
+          <!-- 设置mybatis的自动映射级别为FULL（自动匹配所有） -->
+          <setting name="autoMappingBehavior" value="FULL"/>  
+      </settings>  
+      
+      <!-- 全局别名 -->
+     <typeAliases>  
+         <!--这里给实体类取别名，方便在mapper配置文件中使用，需要改你自己的包名--> 
+         <package name="cn.bdqn.ssm.pojo"/>
+     </typeAliases> 
+</configuration>  

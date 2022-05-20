@@ -1,0 +1,41 @@
+1.数据转换和格式化 有三种 ：
+
+第一种 利用注解标签   <mvc:annotation-driven>  然后在 pojo使用注解 @DateTimeFormat(pattern="yyyy-MM-dd")
+
+  <mvc:annotation-driven> 标签除了会自动注册  DefaultAnnotationHandlerMapping 和 AnnotationMethodHandlerAdapter
+      还会注册FormattingConversionServiceFactoryBean
+ 
+  
+第二种：自定义转换器  说白创建一个java类 实现内容 ：将字符串的日期转化成 date类型
+   p351 - p352
+    
+    然后将自定义的转换器 配置到SpringMVC数据格式化转换器中
+    p352  实例16
+   
+第三种：使用@InitBinder注解装配自定义编辑器
+       
+package cn.smbms.controller;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+
+public class BaseController {  //改控制器主要是实现 将字符串的日期 转换为Date类型
+	
+	@InitBinder
+	public void initBinderStrToDate(WebDataBinder  dataBinder){
+		
+		SimpleDateFormat  dateFormat = new SimpleDateFormat("yyyy-MM-dd");		
+		dataBinder.registerCustomEditor(Date.class,new CustomDateEditor(dateFormat,true));
+		
+	}
+
+}
+
+
+让所有控制器继承 BaseController
+       
+       

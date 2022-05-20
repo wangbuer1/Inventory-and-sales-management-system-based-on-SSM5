@@ -1,0 +1,78 @@
+1.添加jar
+aopalliance-1.0.jar
+aspectjweaver-1.6.9.jar
+commons-dbcp.jar
+commons-fileupload-1.2.2.jar
+commons-io-2.4.jar
+commons-lang-2.6.jar
+commons-logging-1.1.1.jar
+commons-pool.jar
+fastjson-1.2.13.jar
+hibernate-validator-4.3.2.Final.jar
+jboss-logging-3.1.0.CR2.jar
+jstl.jar
+standard.jar
+log4j-1.2.17.jar
+mybatis-3.2.2.jar
+mybatis-spring-1.2.0.jar
+mysql-connector-java-5.1.25-bin.jar
+servlet-api.jar
+spring-aop-3.2.13.RELEASE.jar
+spring-beans-3.2.13.RELEASE.jar
+spring-context-3.2.13.RELEASE.jar
+spring-core-3.2.13.RELEASE.jar
+spring-expression-3.2.13.RELEASE.jar
+spring-jdbc-3.2.13.RELEASE.jar
+spring-tx-3.2.13.RELEASE.jar
+spring-web-3.2.13.RELEASE.jar
+spring-webmvc-3.2.13.RELEASE.jar
+validation-api-1.0.0.GA.jar
+
+2.spring ——管理mybatis（核心配置文件，mapper配置）
+
+2.1 mybatis 核心配置文件  mybatis-config.xml
+
+<?xml version="1.0" encoding="UTF-8"?>  
+    <!DOCTYPE configuration   
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"   
+        "http://mybatis.org/dxxxxxxxxxxxtd/mybatis-3-config.dtd">  
+<configuration>  
+      <settings>  
+          <!-- mybatis运行行为 -->  
+          <setting name="lazyLoadingEnabled" value="false" />
+          <!-- 设置mybatis的自动映射级别为FULL（自动匹配所有） -->
+          <setting name="autoMappingBehavior" value="FULL"/>  
+      </settings>  
+      
+      <!-- 全局别名 -->
+     <typeAliases>  
+         <!--这里给实体类取别名，方便在mapper配置文件中使用，需要改你自己的包名--> 
+         <package name="cn.bdqn.ssm.pojo"/>
+     </typeAliases> 
+     
+</configuration>  
+
+2.2  mapper.xml  因为是用spring管理的所以 只需在spring配置文件中 配置sqlsessionfactory 时 扫描即可
+
+ 	<!-- ******配置mybitas SqlSessionFactoryBean-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+    	<property name="dataSource" ref="dataSource"/>
+    	<property name="configLocation" value="classpath:mybatis-config.xml"/>
+    	<property name="mapperLocations" value="classpath:*cn/bdqn/ssm/mapper/*.xml"></property>  
+    </bean>
+.
+2.3  spring 配置文件  ：applicationContext-mybatis.xml
+
+
+3. springMVC 配置文件
+
+4.web.xml ——spring配置文件，springmvc配置文件，springmvc分发器，spring监听，字符集过滤器，log日志
+
+
+
+
+
+
+
+
+

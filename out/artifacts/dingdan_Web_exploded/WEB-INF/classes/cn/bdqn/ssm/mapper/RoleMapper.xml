@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.bdqn.ssm.mapper.RoleMapper">
+	<resultMap id="BaseResultMap" type="cn.bdqn.ssm.pojo.Role">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="roleCode" jdbcType="VARCHAR" property="roleCode" />
+		<result column="roleName" jdbcType="VARCHAR" property="roleName" />
+		<result column="createdBy" jdbcType="BIGINT" property="createdBy" />
+		<result column="creationDate" jdbcType="TIMESTAMP" property="creationDate" />
+		<result column="modifyBy" jdbcType="BIGINT" property="modifyBy" />
+		<result column="modifyDate" jdbcType="TIMESTAMP" property="modifyDate" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		id, roleCode, roleName, createdBy, creationDate, modifyBy,
+		modifyDate
+	</sql>
+	<!-- 获取所有的角色列表 -->
+	<select id="getCount" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from smbms_role
+	</select>
+	<!-- 添加角色信息 -->
+	<insert id="addrole" parameterType="Role">
+		INSERT INTO smbms.smbms_role
+		(roleCode, roleName, createdBy, creationDate)
+		VALUES(#{roleCode},
+		#{roleName}, #{createdBy}, #{creationDate} );
+	</insert>
+	<!-- 根据id查询角色信息 -->
+	<select id="getrolebyid" resultType="Role">
+		SELECT *
+		FROM
+		smbms.smbms_role WHERE id = #{id}
+	</select>
+	<!-- 根据id 修改角色信息 -->
+	<update id="updateole" parameterType="Role">
+		UPDATE smbms.smbms_role
+		SET
+		roleName = #{roleName} ,
+		modifyBy =
+		#{modifyBy},
+		modifyDate = #{modifyDate}
+		WHERE
+		id = #{id}
+	</update>
+</mapper>

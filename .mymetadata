@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="dingdan"
+  id="myeclipse.1496906023675"
+  context-root="/SSM1"
+  j2ee-spec="5.0"
+  archive="dingdan.war">
+  <attributes>
+    <attribute name="webrootdir" value="/WebRoot" />
+  </attributes>
+</project-module>
+
